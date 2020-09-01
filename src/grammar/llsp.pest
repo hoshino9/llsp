@@ -1,0 +1,27 @@
+//
+// Created by intellij-pest on 2020-08-22
+// llsp
+// Author: hoshino
+//
+
+WHITESPACE = _{ " " | NEWLINE }
+COMMENT = _{ ";" ~ ANY* }
+
+Number = @{ "-"? ~ !"0" ~ DECIMAL_NUMBER ~ DECIMAL_NUMBER* }
+
+SymChar = _{ !( "'" | "(" | ")" | "\"" | " " ) ~ ANY }
+
+Escape = _{ "\\" ~ ("\\" | "n") }
+RawChar = _{ Escape | !( "\"" | "'" | "\\" ) ~ ANY }
+Char = @{ "'" ~ RawChar ~ "'" }
+String = @{ "\"" ~ RawChar+ ~ "\"" }
+
+Symbol = @{ SymChar+ }
+
+Quoted = ${ "'" ~ list }
+
+Literal = { Number | Quoted | list | Char | String | Symbol }
+
+list = { "(" ~ Literal* ~ ")" }
+
+llsp = { list* ~ EOI }
